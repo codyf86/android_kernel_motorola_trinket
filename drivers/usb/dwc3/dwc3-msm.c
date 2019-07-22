@@ -1941,7 +1941,7 @@ static void dwc3_msm_vbus_draw_work(struct work_struct *w)
 	dwc3_msm_gadget_vbus_draw(mdwc, dwc->vbus_draw);
 }
 
-#define MAX_ERR_CNT 50
+#define MAX_ERR_CNT 5
 static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 							unsigned int value)
 {
@@ -1954,8 +1954,7 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 	switch (event) {
 	case DWC3_CONTROLLER_ERROR_EVENT:
 		/* Avoid a flood of Error events */
-		if ((dwc->err_cnt++ >= MAX_ERR_CNT) &&
-		    (dwc->err_cnt % MAX_ERR_CNT))
+		if (dwc->err_cnt++ >= MAX_ERR_CNT)
 			break;
 
 		dev_info(mdwc->dev,
